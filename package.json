@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "evergreen-ui": "^4.28.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "start": "parcel index.html"
+  }
+}
