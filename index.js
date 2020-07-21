@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { SearchInput, Text, Switch, Autocomplete, TickCircleIcon, Table, Pane } from 'evergreen-ui'
+import { SearchInput, Text, Switch, ApplicationsIcon, TickCircleIcon, Table, Pane } from 'evergreen-ui'
 
 import 'style.css';
+const API_BASE = 'http://localhost:8080';
 
 class DataPuller extends React.Component{
 
@@ -16,13 +17,16 @@ class DataPuller extends React.Component{
   }
 
   componentDidMount(){
-    fetch("http://localhost:8080/hi")
+    fetch(`${API_BASE}/hi`)
     .then(data =>data.json())
     .then(asJson =>console.log(asJson));
   }
 
   search(term){
-    fetch(`http://localhost:8080/term/${term}`)
+    if(term === undefined || term.length === 0){
+      return[];
+    }
+    fetch(`${API_BASE}/search/${term}`)
     .then(data =>data.json())
     .then(asJson =>this.setState({ artists : asJson }));
   }
@@ -34,6 +38,19 @@ class DataPuller extends React.Component{
     // profiles.push({id:1, name:"trey", lastActivity:new Date().toISOString(), ltv:3})
     // profiles.push({id:2, name:"nadine", lastActivity:new Date().toISOString(), ltv:3})
     // profiles.filter
+
+    let searchResult  = this.state.artists.map(profile => {
+      let icon = profile.type == 'Artist' ? <TickCircleIcon color="success" marginRight={16} /> : <ApplicationsIcon color="success" marginRight={16} />
+      let row = <Table.Row key={profile.id} isSelectable onSelect={() => alert(profile.name)}>
+        <Table.TextCell>{profile.name===undefined?profile.title:profile.name}</Table.TextCell>
+        <Table.TextCell>{profile.lastActivity}</Table.TextCell>
+        <Table.TextCell >
+        {icon}
+        </Table.TextCell>
+      </Table.Row>
+      return row;
+    })
+  
 
     let pane = 
     <Pane  width={1000} margin="auto" >
@@ -93,15 +110,7 @@ class DataPuller extends React.Component{
         </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body>
-        {this.state.artists.map(profile => (
-          <Table.Row key={profile.id} isSelectable onSelect={() => alert(profile.name)}>
-            <Table.TextCell>{profile.name}</Table.TextCell>
-            <Table.TextCell>{profile.lastActivity}</Table.TextCell>
-            <Table.TextCell >
-            <TickCircleIcon color="success" marginRight={16} />
-            </Table.TextCell>
-          </Table.Row>
-        ))}
+      {searchResult}
       </Table.Body>
     </Table>
 
