@@ -8,7 +8,11 @@ class DataPuller extends React.Component{
 
   constructor(props){
       super(props)
-      this.state = {showArtists:false, showAlbums:false, showTracks:false}
+      this.state = {
+        showArtists:false, 
+        showAlbums:false, 
+        showTracks:false,
+        artists:[]}
   }
 
   componentDidMount(){
@@ -17,10 +21,18 @@ class DataPuller extends React.Component{
     .then(asJson =>console.log(asJson));
   }
 
+  search(term){
+    fetch(`http://localhost:8080/term/${term}`)
+    .then(data =>data.json())
+    .then(asJson =>this.setState({ artists : asJson }));
+  }
   render(){
-    let profiles = [];
-    profiles.push({id:1, name:"trey", lastActivity:new Date().toISOString(), ltv:3})
-    profiles.push({id:2, name:"nadine", lastActivity:new Date().toISOString(), ltv:3})
+    
+    let profiles = this.state.artists;
+
+
+    // profiles.push({id:1, name:"trey", lastActivity:new Date().toISOString(), ltv:3})
+    // profiles.push({id:2, name:"nadine", lastActivity:new Date().toISOString(), ltv:3})
     // profiles.filter
 
     let pane = 
@@ -29,7 +41,7 @@ class DataPuller extends React.Component{
 
 <Table.SearchHeaderCell
       height={20} margin={30}
-    onChange={value => console.log(value)}
+    onChange={value => this.search(value)}
     placeholder='Search by artist, track, album...'
   />
 
@@ -81,7 +93,7 @@ class DataPuller extends React.Component{
         </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body>
-        {profiles.map(profile => (
+        {this.state.artists.map(profile => (
           <Table.Row key={profile.id} isSelectable onSelect={() => alert(profile.name)}>
             <Table.TextCell>{profile.name}</Table.TextCell>
             <Table.TextCell>{profile.lastActivity}</Table.TextCell>
