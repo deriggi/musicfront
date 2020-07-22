@@ -3,5 +3,5 @@ This is the front end for the music service. It is a simple search and filter to
 
 ![gif of the action](searchandfilter.gif)
 
-# Tools Used
+## Tools Used
 This application was built with React and the Evergreen framework
