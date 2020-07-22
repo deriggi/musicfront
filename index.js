@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { SearchInput, Text, Switch, ApplicationsIcon, PersonIcon, Table, Pane } from 'evergreen-ui'
+import { SearchInput, Text, Switch, ApplicationsIcon, MusicIcon, PersonIcon, Table, Pane } from 'evergreen-ui'
 
 import 'style.css';
 const API_BASE = 'http://localhost:8080';
@@ -34,28 +34,32 @@ class DataPuller extends React.Component {
   render() {
 
     let profiles = this.state.artists;
-    let filtered = profiles.filter(p => this.state.showArtists && p.type == 'Artist' || this.state.showAlbums && p.type == 'Album')
+    let filtered = profiles.filter(
+              p => this.state.showArtists && p.type == 'Artist' 
+              || this.state.showAlbums && p.type == 'Album'
+              || this.state.showTracks && p.type == 'Track')
     
     let searchResult = filtered.map(profile => {
-      let icon;
       
-      if(profile.type == 'Artist'){
-        icon  =<PersonIcon color="muted" marginRight={16} />;
-      }else if (profile.type == 'Album'){
-        icon = <ApplicationsIcon color="muted" marginRight={16} />
-      }else{
-        icon = <ApplicationsIcon color="muted" marginRight={16} />
-      }
+    let icon;
 
-      let row = <Table.Row key={profile.id} isSelectable onSelect={() => alert(profile.name)}>
-        <Table.TextCell>{profile.name === undefined ? profile.title : profile.name}</Table.TextCell>
-        {/* <Table.TextCell>{profile.lastActivity}</Table.TextCell> */}
-        <Table.TextCell >
-          {icon}
-        </Table.TextCell>
-      </Table.Row>
-      return row;
-    })
+    if(profile.type == 'Artist'){
+      icon  =<PersonIcon color="muted" marginRight={16} />;
+    }else if (profile.type == 'Album'){
+      icon = <ApplicationsIcon color="muted" marginRight={16} />
+    }else{
+      icon = <MusicIcon color="muted" marginRight={16} />
+    }
+
+    let row = <Table.Row key={profile.id} isSelectable onSelect={() => alert(profile.name)}>
+      <Table.TextCell>{profile.name === undefined ? profile.title : profile.name}</Table.TextCell>
+      {/* <Table.TextCell>{profile.lastActivity}</Table.TextCell> */}
+      <Table.TextCell >
+        {icon}
+      </Table.TextCell>
+    </Table.Row>
+    return row;
+  })
 
     
 
